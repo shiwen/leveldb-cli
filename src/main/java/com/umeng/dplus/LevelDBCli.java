@@ -1,10 +1,8 @@
 package com.umeng.dplus;
 
 import jline.console.ConsoleReader;
-import jline.console.completer.AggregateCompleter;
 import jline.console.completer.ArgumentCompleter;
 import jline.console.completer.Completer;
-import jline.console.completer.FileNameCompleter;
 import jline.console.completer.NullCompleter;
 import jline.console.completer.StringsCompleter;
 
@@ -16,45 +14,36 @@ public class LevelDBCli {
     public static void main(String... args) throws IOException {
         ConsoleReader reader = new ConsoleReader();
         reader.setPrompt("leveldb> ");
-        //        reader.addCompleter(new AggregateCompleter(
-        ////                        new ArgumentCompleter(new StringsCompleter("show"), new NullCompleter()),
-        //                        new ArgumentCompleter(new StringsCompleter("show"), new StringsCompleter("aaa",
-        //                                "access-expression", "access-lists", "accounting", "adjancey"), new
-        // NullCompleter()),
-        ////                        new ArgumentCompleter(new StringsCompleter("show"), new StringsCompleter("ip"), new
-        ////                                StringsCompleter("access-lists", "accounting", "admission", "aliases",
-        // "arp"), new
-        ////                                NullCompleter()),
-        ////                        new ArgumentCompleter(new StringsCompleter("show"), new StringsCompleter("ip"), new
-        ////                                StringsCompleter("interface"), new StringsCompleter("ATM", "Async",
-        // "BVI"), new
-        ////                                NullCompleter()),
-        //                        new ArgumentCompleter(new StringsCompleter("set"), new NullCompleter())
-        //                )
-        //        );
         ArgumentCompleter completer = new ArgumentCompleter(new StringsCompleter("set", "get"), new NullCompleter(), new StringsCompleter("aaa", "bbb"));
         completer.setStrict(false);
         reader.addCompleter(completer);
 
-//        reader.addCompleter(new AggregateCompleter(new FileNameCompleter(),
-//            new CustomCompleter(),
-//            new ArgumentCompleter(new StringsCompleter("set", "get"), new NullCompleter(), new StringsCompleter("a", "b"))));
-
-
         String line;
         PrintWriter out = new PrintWriter(reader.getOutput());
 
-        while ((line = reader.readLine()) != null) {
-            out.println("======>\"" + line + "\"");
-            out.flush();
+        DatabaseProfile profile = new EmptyDatabaseProfile(); // TODO empty database profile, 'use' completion
 
-            if (line.equalsIgnoreCase("quit") || line.equalsIgnoreCase("exit")) {
-                break;
+        while ((line = reader.readLine()) != null) {
+            DatabaseProfile p = useDatabase(line);
+            if (p != null) {
+                profile = p;
             }
-            if (line.equalsIgnoreCase("clear")) {
-                reader.clearScreen();
-            }
+
+            profile.process(line, reader, out);
+//            if (result != null) {
+//                out.println(result);
+//                out.flush();
+//            } else if (line.equalsIgnoreCase("quit") || line.equalsIgnoreCase("exit")) {
+//                profile.onExit();
+//                break;
+//            } else if (line.equalsIgnoreCase("clear")) {
+//                reader.clearScreen();
+//            }
         }
+    }
+
+    private static DatabaseProfile useDatabase(String line) {
+        return null;
     }
 }
 
