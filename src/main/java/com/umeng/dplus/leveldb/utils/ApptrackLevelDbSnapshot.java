@@ -1,7 +1,6 @@
 package com.umeng.dplus.leveldb.utils;
 
 import java.io.File;
-import java.io.IOException;
 
 public class ApptrackLevelDbSnapshot {
     // TODO config file

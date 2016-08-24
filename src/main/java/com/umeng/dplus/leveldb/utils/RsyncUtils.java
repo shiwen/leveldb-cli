@@ -9,7 +9,7 @@ import java.util.List;
 public class RsyncUtils {
     public static void sync(File src, File dest, String... exclusions) throws IOException {
         List<String> cmd = new ArrayList<String>();
-        cmd.addAll(Arrays.asList("rsync", "-rz", src.getAbsolutePath() + "/", dest.getAbsolutePath()));
+        cmd.addAll(Arrays.asList("rsync", "-rz", "--delete", src.getAbsolutePath() + "/", dest.getAbsolutePath()));
         for (String exclusion : exclusions) {
             cmd.add("--exclude");
             cmd.add(exclusion);
