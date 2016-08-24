@@ -8,15 +8,15 @@ import java.io.PrintWriter;
 import java.util.Collection;
 
 public abstract class AbstractDatabaseProfile implements DatabaseProfile {
-    protected ConsoleReader reader;
+    protected ConsoleReader console;
     protected PrintWriter out;
     private AggregateCompleter completer;
 
-    public AbstractDatabaseProfile(ConsoleReader reader) {
-        this.reader = reader;
-        this.out = new PrintWriter(reader.getOutput(), true);
+    public AbstractDatabaseProfile(ConsoleReader console) {
+        this.console = console;
+        this.out = new PrintWriter(console.getOutput(), true);
 
-        Collection<Completer> cs = reader.getCompleters();
+        Collection<Completer> cs = console.getCompleters();
         if (cs.size() == 1) {
             Completer c = cs.iterator().next();
             if (c instanceof AggregateCompleter) {

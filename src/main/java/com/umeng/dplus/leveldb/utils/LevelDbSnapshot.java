@@ -30,6 +30,10 @@ public class LevelDbSnapshot implements Closeable {
     private File snapshotPath;
     private boolean closed = false;
 
+    public static LevelDbSnapshot getSnapshot(String tag) {
+        return DB_MAP.get(tag);
+    }
+
     public static LevelDbSnapshot getSnapshot(String tag, File dataPath) {
         LevelDbSnapshot snapshot = DB_MAP.get(tag);
         try {
@@ -101,5 +105,9 @@ public class LevelDbSnapshot implements Closeable {
     public void close() throws IOException {
         db.close();
         closed = true;
+    }
+
+    public boolean isClosed() {
+        return closed;
     }
 }

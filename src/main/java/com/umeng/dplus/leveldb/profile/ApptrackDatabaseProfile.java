@@ -51,9 +51,9 @@ public class ApptrackDatabaseProfile extends AbstractDatabaseProfile implements 
 
     private Table table = Table.UNKNOWN;
 
-    public ApptrackDatabaseProfile(ConsoleReader reader) {
-        super(reader);
-        reader.setPrompt("apptrack> ");
+    public ApptrackDatabaseProfile(ConsoleReader console) {
+        super(console);
+        console.setPrompt("apptrack> ");
         addCompleters(COMMON_COMPLETERS);
     }
 
@@ -74,19 +74,19 @@ public class ApptrackDatabaseProfile extends AbstractDatabaseProfile implements 
 
             if (args[1].equals("click")) {
                 table = Table.CLICK;
-                reader.setPrompt("apptrack[click]> ");
+                console.setPrompt("apptrack[click]> ");
                 addCompleters(CLICK_COMPLETERS);
             } else if (args[1].equals("install")) {
                 table = Table.INSTALL;
-                reader.setPrompt("apptrack[install]> ");
+                console.setPrompt("apptrack[install]> ");
                 addCompleters(INSTALL_COMPLETERS);
             } else if (args[1].equals("cookie")) {
                 table = Table.COOKIE;
-                reader.setPrompt("apptrack[cookie]> ");
+                console.setPrompt("apptrack[cookie]> ");
                 addCompleters(COOKIE_COMPLETERS);
             } else {
                 table = Table.UNKNOWN;
-                reader.setPrompt("apptrack> ");
+                console.setPrompt("apptrack> ");
             }
 
         } else if (args[0].equals("get")) {
@@ -196,8 +196,9 @@ public class ApptrackDatabaseProfile extends AbstractDatabaseProfile implements 
 
     @Override
     public void close() {
-        reader.setPrompt("> ");
+        console.setPrompt("> ");
         removeCompleters(COMMON_COMPLETERS);
+        ApptrackLevelDbSnapshot.close();
     }
 
     private enum Table {

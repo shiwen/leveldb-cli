@@ -13,18 +13,18 @@ import java.io.IOException;
 
 public class LevelDbCli {
     public static void main(String... args) throws IOException {
-        ConsoleReader reader = new ConsoleReader();
+        ConsoleReader console = new ConsoleReader();
         AggregateCompleter aggregateCompleter = new AggregateCompleter();
         aggregateCompleter.addCompleter(new ArgumentCompleter(new StringsCompleter("use"),
                 new StringsCompleter("apptrack"), new NullCompleter()));
         aggregateCompleter.addCompleter(new ArgumentCompleter(new StringsCompleter("clear", "exit", "quit"),
                 new NullCompleter()));
-        reader.addCompleter(aggregateCompleter);
+        console.addCompleter(aggregateCompleter);
 
-        DatabaseProfile profile = new EmptyDatabaseProfile(reader);
+        DatabaseProfile profile = new EmptyDatabaseProfile(console);
         String line;
 
-        while ((line = reader.readLine()) != null) {
+        while ((line = console.readLine()) != null) {
             String[] commandArgs = parseCommandLine(line);
             if (commandArgs.length == 0) {
                 continue;
@@ -35,7 +35,7 @@ public class LevelDbCli {
                     continue;
                 }
                 DatabaseProfile p;
-                if ((p = changeDatabase(commandArgs[1], reader)) != null) {
+                if ((p = changeDatabase(commandArgs[1], console)) != null) {
                     profile.close();
                     profile = p;
                 }
@@ -44,7 +44,7 @@ public class LevelDbCli {
                 if (commandArgs.length != 1) {
                     continue;
                 }
-                reader.clearScreen();
+                console.clearScreen();
 
             } else if (commandArgs[0].equals("exit") || commandArgs[0].equals("quit")) {
                 if (commandArgs.length != 1) {
@@ -59,15 +59,15 @@ public class LevelDbCli {
         }
     }
 
-    private static DatabaseProfile changeDatabase(String database, ConsoleReader reader) {
+    private static DatabaseProfile changeDatabase(String database, ConsoleReader console) {
         if (database.equals("apptrack")) {
-            return new ApptrackDatabaseProfile(reader);
+            return new ApptrackDatabaseProfile(console);
         } else {
             return null;
         }
     }
 
     private static String[] parseCommandLine(String line) {
-        return line.toLowerCase().split("\\s");  // TODO parse command line, escape characters, etc.
+        return line.toLowerCase().split("\\s");  // TODO parse command line, escape characters, quotes, etc.
     }
 }
