@@ -103,6 +103,7 @@ public class LevelDbSnapshot implements Closeable {
     }
 
     public void close() throws IOException {
+        // TODO delete snapshot directory
         db.close();
         closed = true;
     }

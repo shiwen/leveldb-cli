@@ -51,6 +51,7 @@ public class LevelDbCli {
                     continue;
                 }
                 profile.close();
+                // TODO handle SIGTERM
                 break;
             } else {
                 profile.process(commandArgs);
