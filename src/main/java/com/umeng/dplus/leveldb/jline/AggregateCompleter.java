@@ -1,4 +1,4 @@
-package com.umeng.dplus;
+package com.umeng.dplus.leveldb.jline;
 
 import jline.console.completer.Completer;
 
@@ -20,7 +20,6 @@ public class AggregateCompleter implements Completer {
     private final List<Completer> completers = new ArrayList<Completer>();
 
     public AggregateCompleter() {
-        // empty
     }
 
     /**
@@ -42,6 +41,14 @@ public class AggregateCompleter implements Completer {
      */
     public AggregateCompleter(final Completer... completers) {
         this(Arrays.asList(completers));
+    }
+
+    public void addCompleter(Completer completer) {
+        completers.add(completer);
+    }
+
+    public void removeCompleter(Completer completer) {
+        completers.remove(completer);
     }
 
     /**
@@ -80,7 +87,11 @@ public class AggregateCompleter implements Completer {
         // Append candidates from completions which have the same cursor position as max
         for (Completion completion : completions) {
             if (completion.cursor == max) {
-                completion.candidates.stream().filter(s -> !candidates.contains(s)).forEach(candidates::add);
+                for (CharSequence cs : completion.candidates) {
+                    if (!candidates.contains(cs)) {
+                        candidates.add(cs);
+                    }
+                }
             }
         }
 
@@ -96,16 +107,16 @@ public class AggregateCompleter implements Completer {
     }
 
     private class Completion {
-        public final List<CharSequence> candidates;
+        final List<CharSequence> candidates;
 
-        public int cursor;
+        int cursor;
 
-        public Completion(final List<CharSequence> candidates) {
+        Completion(final List<CharSequence> candidates) {
             checkNotNull(candidates);
             this.candidates = new LinkedList<CharSequence>(candidates);
         }
 
-        public void complete(final Completer completer, final String buffer, final int cursor) {
+        void complete(final Completer completer, final String buffer, final int cursor) {
             checkNotNull(completer);
             this.cursor = completer.complete(buffer, cursor, candidates);
         }
