@@ -67,7 +67,7 @@ public class LevelDbSnapshot implements Closeable {
             throw new IOException();
         }
 
-        RsyncUtils.sync(dataPath, snapshotPath, "LOCK");
+        SymbolicLinkUtils.createLink(dataPath, snapshotPath, "LOCK");
 
         DB db;
         try {
@@ -81,7 +81,7 @@ public class LevelDbSnapshot implements Closeable {
     }
 
     public String get(String key) throws IOException {
-        RsyncUtils.sync(dataPath, snapshotPath, "LOCK");
+        SymbolicLinkUtils.createLink(dataPath, snapshotPath, "LOCK");
 
         byte[] value;
         try {
