@@ -1,5 +1,6 @@
 package com.umeng.dplus.leveldb.utils;
 
+import org.apache.commons.io.FileUtils;
 import org.iq80.leveldb.DB;
 import org.iq80.leveldb.DBException;
 import org.iq80.leveldb.Options;
@@ -103,8 +104,8 @@ public class LevelDbSnapshot implements Closeable {
     }
 
     public void close() throws IOException {
-        // TODO delete snapshot directory
         db.close();
+        FileUtils.deleteDirectory(snapshotPath);
         closed = true;
     }
 
