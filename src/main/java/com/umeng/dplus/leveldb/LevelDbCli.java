@@ -24,8 +24,7 @@ public class LevelDbCli {
         aggregateCompleter.addCompleter(new ArgumentCompleter(new StringsCompleter("clear", "exit", "quit"),
                 new NullCompleter()));
         console.addCompleter(aggregateCompleter);
-        console.setHistory(new FileHistory(new File(".leveldbcli_history")));
-        console.setHistoryEnabled(true);
+        console.setHistory(new FileHistory(new File("/home/admin/.leveldbcli_history")));
 
         profile = new EmptyDatabaseProfile(console);
         Runtime.getRuntime().addShutdownHook(new Thread() {
