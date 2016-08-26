@@ -17,7 +17,7 @@ public class LevelDbCli {
     private static DatabaseProfile profile;
 
     public static void main(String... args) throws IOException {
-        ConsoleReader console = new ConsoleReader();
+        final ConsoleReader console = new ConsoleReader();
         AggregateCompleter aggregateCompleter = new AggregateCompleter();
         aggregateCompleter.addCompleter(new ArgumentCompleter(new StringsCompleter("use"),
                 new StringsCompleter("apptrack"), new NullCompleter()));
@@ -25,12 +25,18 @@ public class LevelDbCli {
                 new NullCompleter()));
         console.addCompleter(aggregateCompleter);
         console.setHistory(new FileHistory(new File(".leveldbcli_history")));
+        console.setHistoryEnabled(true);
 
         profile = new EmptyDatabaseProfile(console);
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
             public void run() {
                 profile.close();
+                try {
+                    ((FileHistory) console.getHistory()).flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
