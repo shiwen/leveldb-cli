@@ -8,7 +8,9 @@ import jline.console.ConsoleReader;
 import jline.console.completer.ArgumentCompleter;
 import jline.console.completer.NullCompleter;
 import jline.console.completer.StringsCompleter;
+import jline.console.history.FileHistory;
 
+import java.io.File;
 import java.io.IOException;
 
 public class LevelDbCli {
@@ -22,6 +24,7 @@ public class LevelDbCli {
         aggregateCompleter.addCompleter(new ArgumentCompleter(new StringsCompleter("clear", "exit", "quit"),
                 new NullCompleter()));
         console.addCompleter(aggregateCompleter);
+        console.setHistory(new FileHistory(new File(".leveldbcli_history")));
 
         profile = new EmptyDatabaseProfile(console);
         Runtime.getRuntime().addShutdownHook(new Thread() {
